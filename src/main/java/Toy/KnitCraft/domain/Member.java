@@ -1,14 +1,13 @@
 package Toy.KnitCraft.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Member {
 
     @Id
@@ -24,4 +23,11 @@ public class Member {
     private LocalDateTime created_at;
 
     private LocalDateTime updated_at;
+
+    @Builder
+    public Member(String email, String username,String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 }
