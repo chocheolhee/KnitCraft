@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -19,6 +21,10 @@ public class Post {
     private String title;
 
     private String content;
+
+    private LocalDateTime created_at;
+
+    private LocalDateTime updated_at;
 
     @Builder
     public Post(String title, String content) {
