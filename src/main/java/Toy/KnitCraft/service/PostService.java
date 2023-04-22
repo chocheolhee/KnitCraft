@@ -1,5 +1,6 @@
 package Toy.KnitCraft.service;
 
+import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.repository.PostRepository;
 import Toy.KnitCraft.request.PostCreate;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,12 @@ public class PostService {
 
     public void write(PostCreate postCreate) {
 
+        Post post = Post.builder()
+                .title(postCreate.getTitle())
+                .content(postCreate.getContent())
+                .build();
 
-        postRepository.save(postCreate);
+        postRepository.save(post);
     }
 
 }
