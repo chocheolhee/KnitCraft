@@ -1,25 +1,32 @@
 package Toy.KnitCraft.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
     private Long id;
 
     private String title;
 
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "post")
+    private final List<Comment> comments = new ArrayList<>();
 
     private LocalDateTime created_at;
 
@@ -29,5 +36,13 @@ public class Post {
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setMember(Member member) {
+        this.member = member;
+        member.getPosts().add(this);
     }
 }

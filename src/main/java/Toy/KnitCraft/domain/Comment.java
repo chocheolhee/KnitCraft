@@ -1,9 +1,6 @@
 package Toy.KnitCraft.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,14 +10,23 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
 
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     private LocalDateTime created_at;
 
@@ -30,4 +36,15 @@ public class Comment {
     public Comment(String content) {
         this.content = content;
     }
+
+    public void setCommentMember(Member member) {
+        this.member = member;
+        member.getComments().add(this);
+    }
+
+    public void setCommentPost(Post post) {
+        this.post = post;
+        post.getComments().add(this);
+    }
+
 }
