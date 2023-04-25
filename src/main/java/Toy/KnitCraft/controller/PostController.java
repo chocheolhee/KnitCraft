@@ -1,13 +1,12 @@
 package Toy.KnitCraft.controller;
 
+import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.request.PostCreate;
 import Toy.KnitCraft.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -20,5 +19,11 @@ public class PostController {
     public String post(@RequestBody @Valid PostCreate request) {
         postService.write(request);
         return "true";
+    }
+
+    @GetMapping("/posts/{postId}")
+    public Post get(@PathVariable(name = "postId") Long id) {
+        Post post = postService.get(id);
+        return post;
     }
 }

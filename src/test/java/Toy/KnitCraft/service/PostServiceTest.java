@@ -45,4 +45,23 @@ class PostServiceTest {
         assertEquals("내용입니다.", post.getContent());
     }
 
+    @Test
+    @DisplayName("글 1개 조회")
+    void test2() {
+        // given
+        Post requestPost = Post.builder()
+                .title("아이폰")
+                .content("14")
+                .build();
+        postRepository.save(requestPost);
+
+        // when
+        Post post = postService.get(requestPost.getId());
+
+        // then
+        assertNotNull(post);
+
+        assertEquals("아이폰", post.getTitle());
+        assertEquals("14", post.getContent());
+    }
 }
