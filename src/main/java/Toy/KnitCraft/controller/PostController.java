@@ -2,6 +2,7 @@ package Toy.KnitCraft.controller;
 
 import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.request.PostCreate;
+import Toy.KnitCraft.response.PostResponse;
 import Toy.KnitCraft.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,15 @@ public class PostController {
         return "true";
     }
 
+    /**
+     * Request 클래스
+     * Response 클래스
+     * 분리 완료
+     */
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id) {
-        Post post = postService.get(id);
-        return post;
+    public PostResponse get(@PathVariable(name = "postId") Long id) {
+
+        PostResponse response = postService.get(id);
+        return response;
     }
 }
