@@ -2,13 +2,13 @@ package Toy.KnitCraft.controller;
 
 import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.repository.PostRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,13 +63,40 @@ class PostControllerTest {
         postRepository.save(post);
 
         // expected
-        mockMvc.perform(get("/posts/{postId}",post.getId())
+        mockMvc.perform(get("/posts/{postId}", post.getId())
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("아이폰"))
                 .andExpect(jsonPath("$.content").value("14"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test3() throws Exception {
+        // given
+        Post post1 = Post.builder()
+                .title("아이폰1")
+                .content("구매1")
+                .build();
+        postRepository.save(post1);
+
+        Post post2 = Post.builder()
+                .title("아이폰2")
+                .content("구매2")
+                .build();
+        postRepository.save(post2);
+
+        // expected
+        mockMvc.perform(get("/posts")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(2)))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("아이폰1"))
+                .andExpect(jsonPath("$[0].content").value("구매1"))
                 .andDo(print());
 
     }
