@@ -44,6 +44,11 @@ public class Post {
                 .content(content);
     }
 
+    public void edit(PostEditor postEditor) {
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
+    }
+
     /**
      * 연관관계 메서드
      */
@@ -52,8 +57,4 @@ public class Post {
         member.getPosts().add(this);
     }
 
-    public void edit(PostEditor postEditor) {
-        title = postEditor.getTitle();
-        content = postEditor.getContent();
-    }
 }
