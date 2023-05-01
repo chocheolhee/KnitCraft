@@ -10,12 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @SpringBootTest
 class PostServiceTest {
@@ -82,8 +86,10 @@ class PostServiceTest {
                         .build()).collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
+        Pageable pageable = PageRequest.of(0, 5, DESC, "id");
+
         // when
-        List<PostResponse> posts = postService.getList(0);
+        List<PostResponse> posts = postService.getList(pageable);
 
         // then
         assertEquals(5L, posts.size());
