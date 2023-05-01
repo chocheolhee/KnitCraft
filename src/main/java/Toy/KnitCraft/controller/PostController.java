@@ -1,14 +1,13 @@
 package Toy.KnitCraft.controller;
 
-import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.request.PostCreate;
+import Toy.KnitCraft.request.PostEdit;
 import Toy.KnitCraft.response.PostResponse;
 import Toy.KnitCraft.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +39,10 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponse> getList(Pageable pageable) {
         return postService.getList(pageable);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        postService.edit(postId, request);
     }
 }

@@ -2,6 +2,8 @@ package Toy.KnitCraft.controller;
 
 import Toy.KnitCraft.domain.Post;
 import Toy.KnitCraft.repository.PostRepository;
+import Toy.KnitCraft.request.PostEdit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +20,7 @@ import java.util.stream.IntStream;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +34,8 @@ class PostControllerTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void clean() {
@@ -96,6 +99,30 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.length()", is(5)))
                 .andExpect(jsonPath("$[0].title").value("게시글 제목 30"))
                 .andExpect(jsonPath("$[0].content").value("게시글 내용 30"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() throws Exception {
+        // given
+        Post post = Post.builder()
+                .title("mac")
+                .content("book")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("macEdit")
+                .content("book")
+                .build();
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit))
+                )
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

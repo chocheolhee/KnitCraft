@@ -38,11 +38,22 @@ public class Post {
         this.content = content;
     }
 
+    public PostEditor.PostEditorBuilder toEditor() {
+        return PostEditor.builder()
+                .title(title)
+                .content(content);
+    }
+
     /**
      * 연관관계 메서드
      */
     public void setMember(Member member) {
         this.member = member;
         member.getPosts().add(this);
+    }
+
+    public void edit(PostEditor postEditor) {
+        title = postEditor.getTitle();
+        content = postEditor.getContent();
     }
 }
