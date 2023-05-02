@@ -21,6 +21,7 @@ public class PostController {
 
     @PostMapping("/posts")
     public String post(@RequestBody @Valid PostCreate request) {
+        request.validate();
         postService.write(request);
         return "true";
     }

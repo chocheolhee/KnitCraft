@@ -120,8 +120,7 @@ class PostControllerTest {
         // expected
         mockMvc.perform(patch("/posts/{postId}", post.getId())
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postEdit))
-                )
+                        .content(objectMapper.writeValueAsString(postEdit)))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -141,6 +140,33 @@ class PostControllerTest {
         mockMvc.perform(delete("/posts/{postId}", post.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 조회")
+    void test6() throws Exception {
+        // expected
+        mockMvc.perform(delete("/posts/{postId}", 1L)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 글 수정")
+    void test7() throws Exception {
+        // given
+        PostEdit postEdit = PostEdit.builder()
+                .title("macEdit")
+                .content("book")
+                .build();
+
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", 1L)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit)))
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 }
