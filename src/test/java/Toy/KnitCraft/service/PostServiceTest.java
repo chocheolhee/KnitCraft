@@ -1,6 +1,7 @@
 package Toy.KnitCraft.service;
 
 import Toy.KnitCraft.domain.Post;
+import Toy.KnitCraft.exception.PostNotFound;
 import Toy.KnitCraft.repository.PostRepository;
 import Toy.KnitCraft.request.PostCreate;
 import Toy.KnitCraft.request.PostEdit;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @SpringBootTest
@@ -164,5 +164,23 @@ class PostServiceTest {
 
         //then
         assertEquals(0, postRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회 예외처리")
+    void test7() {
+        // given
+        Post post = Post.builder()
+                .title("mac")
+                .content("book")
+                .build();
+
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.get(post.getId() + 1L);
+        });
+
     }
 }
