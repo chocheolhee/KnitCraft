@@ -37,12 +37,12 @@ public class Comment {
         this.content = content;
     }
 
-    public void setCommentMember(Member member) {
+    public void setMember(Member member) {
         this.member = member;
         member.getComments().add(this);
     }
 
-    public void setCommentPost(Post post) {
+    public void setPost(Post post) {
         this.post = post;
         post.getComments().add(this);
     }
