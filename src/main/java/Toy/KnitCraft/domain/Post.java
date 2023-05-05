@@ -1,5 +1,6 @@
 package Toy.KnitCraft.domain;
 
+import Toy.KnitCraft.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +28,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private final List<Comment> comments = new ArrayList<>();
-
-    private LocalDateTime created_at;
-
-    private LocalDateTime updated_at;
 
     @Builder
     public Post(String title, String content) {

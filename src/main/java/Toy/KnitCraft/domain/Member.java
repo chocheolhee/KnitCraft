@@ -1,16 +1,18 @@
 package Toy.KnitCraft.domain;
 
+import Toy.KnitCraft.domain.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +33,6 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private final List<Comment> comments = new ArrayList<>();
-
-    private LocalDateTime created_at;
-
-    private LocalDateTime updated_at;
 
     @Builder
     public Member(String email, String username, String password, Address address) {
