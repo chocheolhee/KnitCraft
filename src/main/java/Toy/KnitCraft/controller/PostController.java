@@ -20,10 +20,11 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public String post(@RequestBody @Valid PostCreate request) {
-        request.validate();
-        postService.write(request);
-        return "true";
+    public void post(@RequestBody @Valid PostCreate request, @RequestParam String authorization) {
+        if (authorization.equals("cheol")) {
+            request.validate();
+            postService.write(request);
+        }
     }
 
     /**
