@@ -1,5 +1,6 @@
 package Toy.KnitCraft.controller;
 
+import Toy.KnitCraft.config.data.UserSession;
 import Toy.KnitCraft.request.PostCreate;
 import Toy.KnitCraft.request.PostEdit;
 import Toy.KnitCraft.response.PostResponse;
@@ -19,17 +20,10 @@ public class PostController {
 
     private final PostService postService;
 
-    /**
-     * AuthInterceptor Test
-     */
     @GetMapping("/test")
-    public String test() {
-        return "hello";
-    }
-
-    @GetMapping("/excludeInterceptor")
-    public String excludeInterceptor() {
-        return "excludeInterceptor";
+    public String authResolver(UserSession userSession) {
+        log.info(">>>{}", userSession.name);
+        return userSession.name;
     }
 
     @PostMapping("/posts")
