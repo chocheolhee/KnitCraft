@@ -19,6 +19,19 @@ public class PostController {
 
     private final PostService postService;
 
+    /**
+     * AuthInterceptor Test
+     */
+    @GetMapping("/test")
+    public String test() {
+        return "hello";
+    }
+
+    @GetMapping("/excludeInterceptor")
+    public String excludeInterceptor() {
+        return "excludeInterceptor";
+    }
+
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request, @RequestParam String authorization) {
         if (authorization.equals("cheol")) {
