@@ -21,9 +21,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/test")
-    public String authResolver(UserSession userSession) {
-        log.info(">>>{}", userSession.name);
-        return userSession.name;
+    public Long authResolver(UserSession userSession) {
+        log.info(">>>{}", userSession.id);
+        return userSession.id;
     }
 
     @PostMapping("/posts")
