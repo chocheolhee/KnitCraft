@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Address address;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    private final List<Session> sessions = new ArrayList<>();
+
     @OneToMany(mappedBy = "member")
     private final List<Post> posts = new ArrayList<>();
 
@@ -40,5 +44,12 @@ public class Member extends BaseTimeEntity {
         this.username = username;
         this.password = password;
         this.address = address;
+    }
+
+    public void addSession() {
+        sessions.add(Session.builder()
+                .member(this)
+                .build()
+        );
     }
 }
