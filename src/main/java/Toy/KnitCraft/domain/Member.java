@@ -46,10 +46,12 @@ public class Member extends BaseTimeEntity {
         this.address = address;
     }
 
-    public void addSession() {
-        sessions.add(Session.builder()
+    public Session addSession() {
+        Session session = Session.builder()
                 .member(this)
-                .build()
-        );
+                .build();
+
+        sessions.add(session);
+        return session;
     }
 }

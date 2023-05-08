@@ -3,13 +3,13 @@ package Toy.KnitCraft.domain;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Session {
 
