@@ -2,6 +2,7 @@ package Toy.KnitCraft.controller;
 
 import Toy.KnitCraft.domain.Address;
 import Toy.KnitCraft.domain.Member;
+import Toy.KnitCraft.domain.Session;
 import Toy.KnitCraft.repository.MemberRepository;
 import Toy.KnitCraft.repository.PostRepository;
 import Toy.KnitCraft.repository.SessionRepository;
@@ -143,6 +144,46 @@ class AuthControllerTest {
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken", notNullValue()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 후 권한이 필요한 페이지 접속")
+    void test4() throws Exception {
+        // given
+        Member member = Member.builder()
+                .email("cheolhee@gmail.com")
+                .password("1234")
+                .username("조철희")
+                .build();
+        Session session = member.addSession();
+        memberRepository.save(member);
+
+        // expected
+        mockMvc.perform(get("/foo")
+                        .header("Authorization",session.getAccessToken())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
+    void test5() throws Exception {
+        // given
+        Member member = Member.builder()
+                .email("cheolhee@gmail.com")
+                .password("1234")
+                .username("조철희")
+                .build();
+        Session session = member.addSession();
+        memberRepository.save(member);
+
+        // expected
+        mockMvc.perform(get("/foo")
+                        .header("Authorization",session.getAccessToken() + "error")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
 }
