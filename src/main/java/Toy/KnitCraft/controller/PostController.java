@@ -1,6 +1,5 @@
 package Toy.KnitCraft.controller;
 
-import Toy.KnitCraft.config.data.UserSession;
 import Toy.KnitCraft.request.PostCreate;
 import Toy.KnitCraft.request.PostEdit;
 import Toy.KnitCraft.response.PostResponse;
