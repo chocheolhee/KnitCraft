@@ -1,13 +1,13 @@
 package Toy.KnitCraft.service;
 
 import Toy.KnitCraft.domain.Member;
-import Toy.KnitCraft.domain.Session;
-import Toy.KnitCraft.exception.InvalidSigninInformation;
+import Toy.KnitCraft.exception.AlreadyExistsEmailException;
 import Toy.KnitCraft.repository.MemberRepository;
-import Toy.KnitCraft.request.Login;
+import Toy.KnitCraft.request.Signup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +15,18 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public String signIn(Login login) {
-        Member member = memberRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(InvalidSigninInformation::new);
-        Session session = member.addSession();
+    public void signup(Signup signup) {
+        Optional<Member> memberOptional = memberRepository.findByEmail(signup.getEmail());
+        if (memberOptional.isPresent()) {
+            throw new AlreadyExistsEmailException();
+        }
 
-        return session.getAccessToken();
+        Member member = Member.builder()
+                .email(signup.getEmail())
+                .password(signup.getPassword())
+                .username(signup.getUsername())
+                .build();
+        memberRepository.save(member);
+
     }
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Login {
+public class Signup {
 
     @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
@@ -15,8 +15,11 @@ public class Login {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
 
+    @NotBlank(message = "이름를 입력해주세요.")
+    private String username;
+
     @Builder
-    public Login(String email, String password) {
+    public Signup(String email, String password) {
         this.email = email;
         this.password = password;
     }

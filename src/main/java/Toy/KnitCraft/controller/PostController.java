@@ -20,18 +20,9 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/test")
-    public Long authResolver(UserSession userSession) {
-        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
-
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request, @RequestParam String authorization) {
-        if (authorization.equals("cheol")) {
-            request.validate();
+    public void post(@RequestBody @Valid PostCreate request) {
             postService.write(request);
-        }
     }
 
     /**

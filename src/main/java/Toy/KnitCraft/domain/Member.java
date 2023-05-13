@@ -29,9 +29,6 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
-    private final List<Session> sessions = new ArrayList<>();
-
     @OneToMany(mappedBy = "member")
     private final List<Post> posts = new ArrayList<>();
 
@@ -46,12 +43,4 @@ public class Member extends BaseTimeEntity {
         this.address = address;
     }
 
-    public Session addSession() {
-        Session session = Session.builder()
-                .member(this)
-                .build();
-
-        sessions.add(session);
-        return session;
-    }
 }
