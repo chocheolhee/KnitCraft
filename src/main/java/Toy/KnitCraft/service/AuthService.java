@@ -15,6 +15,9 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * 회원가입
+     */
     public void signup(Signup signup) {
         Optional<Member> memberOptional = memberRepository.findByEmail(signup.getEmail());
         if (memberOptional.isPresent()) {

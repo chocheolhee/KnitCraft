@@ -7,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- * AuthResolver 사용으로 인해 적용된 클래스 X (Interceptor 적용 기록으로 남겨둔 클래스)
- */
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
