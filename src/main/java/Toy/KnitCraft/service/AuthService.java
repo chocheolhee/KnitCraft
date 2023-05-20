@@ -5,7 +5,6 @@ import Toy.KnitCraft.exception.AlreadyExistsEmailException;
 import Toy.KnitCraft.repository.MemberRepository;
 import Toy.KnitCraft.request.Signup;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +14,6 @@ import java.util.Optional;
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public void signup(Signup signup) {
         Optional<Member> memberOptional = memberRepository.findByEmail(signup.getEmail());
@@ -23,11 +21,9 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        String encryptedPassword = passwordEncoder.encode(signup.getPassword());
-
         Member member = Member.builder()
                 .email(signup.getEmail())
-                .password(encryptedPassword)
+                .password(signup.getPassword())
                 .username(signup.getUsername())
                 .build();
         memberRepository.save(member);
