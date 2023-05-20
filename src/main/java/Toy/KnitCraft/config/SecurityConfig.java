@@ -1,7 +1,10 @@
 package Toy.KnitCraft.config;
 
+import Toy.KnitCraft.domain.Member;
+import Toy.KnitCraft.repository.MemberRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -9,10 +12,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +34,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,21 +49,26 @@ public class SecurityConfig {
                         .alwaysRemember(false)
                         .tokenValiditySeconds(259200)
                 )
-                .userDetailsService(userDetailsService())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        UserDetails user = User.withUsername("cheolhee").password("1234").roles("ADMIN").build();
-        manager.createUser(user);
-        return manager;
+    public UserDetailsService userDetailsService(MemberRepository memberRepository) {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                Member member = memberRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException(username + "을 찾을 수 없습니다."));
+                return new UserPrincipal(member);
+            }
+        };
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new SCryptPasswordEncoder(
+                16, 8, 1, 32, 64
+        );
     }
 }
